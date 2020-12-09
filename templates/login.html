@@ -1,0 +1,23 @@
+{% extends 'layouts/baseL.html' %}
+{% block title %}
+Login
+{% endblock %}
+{% block content %}
+<div>
+    <form action="" method="POST">
+        <div>
+            <h1>Iniciar seccion</h1>
+        </div>
+        <div>
+            <label for="email">Usuario</label>
+            <input type="email" name="email" id="email" required>
+        </div>
+        <div>
+            <label for="pass">Contraseña</label>
+            <input type="password" name="password" id="password" required>
+        </div>
+        <button type="submit">Iniciar</button>
+        <a href="{{url_for('registro')}}">Registrate aqui</a>
+    </form>
+</div>
+{% endblock %}

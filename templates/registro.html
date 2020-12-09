@@ -1,0 +1,27 @@
+{% extends 'layouts/baseL.html' %}
+{% block title %}
+Registrarse
+{% endblock %}
+{% block content %}
+<div>
+    <form action="" method="POST">
+        <div>
+            <h1>Registrarse</h1>
+        </div>
+        <div>
+            <label for="nombre">Nombre</label>
+            <input type="text" name="nombre" id="nombre" required>
+        </div>
+        <div>
+            <label for="email">Email</label>
+            <input type="email" name="email" id="email" required>
+        </div>
+        <div>
+            <label for="pass">Contraseña</label>
+            <input type="password" name="password" id="password" required>
+        </div>
+        <button type="submit">Guardar</button>
+        
+    </form>
+</div>
+{% endblock %}

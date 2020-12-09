@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="{{url_for('inicio')}}">Inicio</a></li>
+            <li><a href="{{url_for('categorias')}}">Categorias</a></li>
+            <li><a href="{{url_for('productos')}}">Productos</a></li>
+            <li><a href="{{url_for('editar_perfil')}}">Mi perfil</a></li>
+           
+        </ul>
+    </nav>
+
+    {% block content %}{% endblock %}
+</body>
+</html>
