@@ -12,9 +12,36 @@
             <li><a href="{{url_for('categorias')}}">Categorias</a></li>
             <li><a href="{{url_for('productos')}}">Productos</a></li>
             <li><a href="{{url_for('editar_perfil')}}">Mi perfil</a></li>
-           
+            <li><a href="{{url_for('cerrar_seccion')}}">Cerrar seccion</a></li>
+
+            
         </ul>
     </nav>
+    <div>
+        {% with messages = get_flashed_messages( category_filter=['success'] ) %}
+        {% if messages %}
+        <ul style="color: green;">
+          {% for message in messages %}
+            <li>
+              {{ message }}
+            </li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+      {% endwith %}
+
+      {% with messages = get_flashed_messages( category_filter=['danger'] ) %}
+        {% if messages %}
+        <ul style="color: red;">
+          {% for message in messages %}
+            <li>
+              {{ message }}
+            </li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+      {% endwith %}
+    </div>
 
     {% block content %}{% endblock %}
 </body>

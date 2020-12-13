@@ -1,0 +1,16 @@
+{% extends 'layouts/baseU.html' %}
+{% block title %}
+Crear
+{% endblock %}
+{% block content %}
+<div>
+    <form action="{{url_for('crear_categoria')}}" method="POST">
+        <h1>Crear categoria</h1>
+        <div>
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" name="nombre" required>
+        </div>
+        <button type="submit">Guardar</button>
+    </form>
+</div>
+{% endblock %}

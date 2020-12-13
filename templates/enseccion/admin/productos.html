@@ -5,6 +5,17 @@ Productos
 {% block content %}
 <div>
     <h1>Productos</h1>
-    <a href="#"><button>Crear</button></a>
+    <a href="{{url_for('crear_producto')}}"><button>Crear</button></a>
+    <table>
+        <thead>
+            <th>Id</th>
+            <th>Descripcion</th>
+            <th>Categoria</th>
+            <th>Precio</th>
+        </thead>
+        <tbody>
+            
+        </tbody>
+    </table>
 </div>
 {% endblock %}

@@ -5,6 +5,15 @@ Categorias
 {% block content %}
 <div>
     <h1>Categorias</h1>
-    <a href="#"><button>Crear</button></a>
+    <a href="{{url_for('crear_categoria')}}"><button>Crear</button></a>
+    <table>
+        <thead>
+            <th>Id</th>
+            <th>Descripcion</th>
+        </thead>
+        <tbody>
+            
+        </tbody>
+    </table>
 </div>
 {% endblock %}
