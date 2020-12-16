@@ -3,14 +3,16 @@
 Editar
 {% endblock %}
 {% block content %}
-<div>
-    <form action="">
-        <h1>Editar categoria</h1>
-        <div>
-            <label for="">Descripcion:</label>
-            <input type="text">
+<div class="d-flex flex-column align-items-center my-4 ">
+    <form action="{{url_for('editar_categoria',id=cat.0)}}" class="bg-dark py-2 px-3 rounded-3" method="POST">
+        <h1 class="text-center text-white">Editar categoria</h1>
+        <div class="form-group">
+            <label for="nombre" class="text-white">Nombre<samp class="text-danger">*</samp></label>
+            <input type="text" id="nombre" name="nombre" class="form-control" value="{{cat.2}}">
         </div>
-        <button>Guardar</button>
+        <div class="d-grid ">
+            <button type="submit" class="btn btn-primary my-3 mx-2">Guardar</button>
+        </div>
     </form>
 </div>
 {% endblock %}

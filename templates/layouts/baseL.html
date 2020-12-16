@@ -4,34 +4,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
 </head>
 <body>
-    <div>
+    <div class="container">
+      
         {% with messages = get_flashed_messages( category_filter=['success'] ) %}
         {% if messages %}
-        <ul style="color: green;">
+        <div class="alert alert-success my-0" role="alert">
           {% for message in messages %}
-            <li>
+        
               {{ message }}
-            </li>
+            
           {% endfor %}
-        </ul>
+          
+        </div>
         {% endif %}
       {% endwith %}
 
       {% with messages = get_flashed_messages( category_filter=['danger'] ) %}
         {% if messages %}
-        <ul style="color: red;">
+        <div class="alert alert-danger my-0" role="alert">
           {% for message in messages %}
-            <li>
+        
               {{ message }}
-            </li>
+            
           {% endfor %}
-        </ul>
+          
+        </div>
         {% endif %}
       {% endwith %}
+      {% block content %}{% endblock %}
+    
     </div>
 
-    {% block content %}{% endblock %}
+    
 </body>
 </html>

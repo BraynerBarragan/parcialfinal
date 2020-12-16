@@ -3,17 +3,34 @@
 Categorias
 {% endblock %}
 {% block content %}
-<div>
-    <h1>Categorias</h1>
-    <a href="{{url_for('crear_categoria')}}"><button>Crear</button></a>
-    <table>
+
+<h1 class="text-center my-3">Categorias</h1>
+
+
+<div class="row justify-content-md-center">
+    
+    <div class="col-md-auto">
+    <a href="{{url_for('crear_categoria')}}"><button class="btn btn-primary">Crear</button></a>
+    <table class="table table-dark ">
         <thead>
             <th>Id</th>
             <th>Descripcion</th>
+            <th>Accion</th>
         </thead>
         <tbody>
             
+            {% for categoria in cat %}
+            <tr>
+                <td>{{loop.index}}</td>
+                <td>{{categoria[2]}}</td>
+                <td>
+                    <a href="{{url_for('editar_categoria',id=categoria[0])}}"><button class="btn btn-info btn-sm">Editar</button></a>
+                    <a href="{{url_for('eliminar_categoria',id=categoria[0], cat=categoria[2])}}"><button class="btn btn-danger btn-sm" >Eliminar</button></a>
+                </td>
+            </tr>
+            {%endfor%}
         </tbody>
     </table>
+ </div>
 </div>
 {% endblock %}

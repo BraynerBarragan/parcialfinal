@@ -14,16 +14,16 @@ def index():
 
     email=request.form.get('email')
     password=request.form.get('password')
-
-    if v.verPass(password)==False:#VERIFICAR CONTRASEÑA VALIDA
-        flash('Contraseña invalida... Intentelo de nuevo...', 'danger')
-        return redirect(request.url)
     if email=='' or password=='':#VERIFICAR CAMPOS VACIOS
         flash('No pueden quedar campos vacios... Intentelo de nuevo...', 'danger')
         return redirect(request.url)
+    if v.verPass(password)==False:#VERIFICAR CONTRASEÑA VALIDA
+        flash('Contraseña invalida... Intentelo de nuevo...', 'danger')
+        return redirect(request.url)
+   
 
     usuario=db.execute('select * from usuarios where email=? and password= ?',(email,v.verPass(password),)).fetchone()  
-    print(usuario)
+    #print(usuario)
     if usuario is None:
         flash('Usuario o contraseña incorrecta... Intentelo de nuevo...', 'danger')
         return redirect(request.url)
@@ -128,8 +128,8 @@ def cerrar_seccion():
 def categorias():
     if not 'usuario' in session:
         return redirect(url_for('index'))
-
-    return render_template('enseccion/admin/categorias.html')
+    categorias=db.execute('select * from categorias where id_usuario = ?',(session['usuario'][0],)).fetchall()
+    return render_template('enseccion/admin/categorias.html', cat=categorias)
 
 @app.route('/categorias/crear', methods=('GET','POST'))
 def crear_categoria():
@@ -141,7 +141,10 @@ def crear_categoria():
     if nombre=='':
         flash('No pueden quedar campos vacios... Intentelo de nuevo...', 'danger')
         return redirect(request.url)
-    print(session['usuario'][0],nombre)
+    #print(session['usuario'][0],nombre)
+    if db.execute('select * from categorias where id_usuario = ? and nombre=?',(session['usuario'][0],nombre,)).fetchone()!=None:
+        flash('Ya existe categoria', 'danger')
+        return redirect(request.url)  
     try:
         cursor=db.cursor()
         cursor.execute(""" insert into categorias(
@@ -151,8 +154,52 @@ def crear_categoria():
         """,(session['usuario'][0] ,nombre)) 
         db.commit()
     except:
-        flash('No se pudo guardar la categoria', 'danger')
+        
+        flash('No se pudo guardar categoria', 'danger')
         return redirect(request.url)  
+    flash('Categoria guardada correctamente', 'success')    
+    return redirect(url_for('categorias'))
+
+@app.route('/categorias/editar/<id>', methods=('GET','POST'))
+def editar_categoria(id):
+    if not 'usuario' in session:
+        return redirect(url_for('index'))
+    cat=db.execute('select * from categorias where id=?',(id,)).fetchone()
+    if request.method=='GET':
+        
+        return render_template('enseccion/admin/editarcat.html',cat=cat)
+    nombre=request.form.get('nombre')
+    if nombre=='':
+        flash('No pueden quedar campos vacios... Intentelo de nuevo...', 'danger')
+        return redirect(request.url)
+    #print(session['usuario'][0],nombre)
+    if db.execute('select * from categorias where id_usuario = ? and nombre=? and id!=?',(session['usuario'][0],nombre,id,)).fetchone()!=None:
+        flash('Ya existe categoria', 'danger')
+        return redirect(request.url) 
+    
+    cursor=db.cursor()
+    cursor.execute('UPDATE productos SET categoria = ? WHERE id_usuario= ?and categoria=?',(nombre,session['usuario'][0],cat[2]))
+    cursor.execute(' UPDATE categorias SET nombre = ? WHERE id = ?',(nombre, id))
+
+    db.commit()
+    flash('Categoria editada correctamente...', 'success')
+    return redirect(url_for('categorias'))
+
+
+@app.route('/categorias/eliminar/<id>/<cat>')
+def eliminar_categoria(id ,cat):
+    if not 'usuario' in session:
+        return redirect(url_for('index'))
+    categorias=db.execute('select * from productos where id_usuario = ? and categoria= ?',(session['usuario'][0],cat,)).fetchall()
+    if len(categorias)>0:
+        flash('La categoria se encuentra relacionada con un producto...', 'danger')
+        return redirect(url_for('categorias'))
+    
+
+    cursor=db.cursor()
+    cursor.execute('delete from categorias where id=?',(id,))
+    db.commit()
+    flash('Categoria eliminada correctamente...','success')
     return redirect(url_for('categorias'))
 
 #------PRODUCTOS--------
@@ -160,15 +207,90 @@ def crear_categoria():
 def productos():
     if not 'usuario' in session:
         return redirect(url_for('index'))
+    productos=db.execute('select * from productos where id_usuario = ?',(session['usuario'][0],)).fetchall()
+    return render_template('enseccion/admin/productos.html', pro=productos)
 
-    return render_template('enseccion/admin/productos.html')
-@app.route('/productos/crear')
+@app.route('/productos/crear', methods=('GET','POST'))
 def crear_producto():
     if not 'usuario' in session:
         return redirect(url_for('index'))
+    if request.method=='GET':
+        categorias=db.execute('select nombre from categorias where id_usuario = ?',(session['usuario'][0],)).fetchall()
+        if len(categorias)== 0:
+            flash('No hay categorias registradas...', 'danger')
+            return redirect(url_for('productos'))
 
-    return render_template('enseccion/admin/crearpro.html')
+        return render_template('enseccion/admin/crearpro.html', cat=categorias)
+    
+    nombre=request.form.get('nombre')
+    precio=request.form.get('precio')
+    categoria=request.form.get('categoria')
 
+
+    if nombre=='' or precio=='' or categoria=='':
+        flash('No pueden quedar campos vacios... Intentelo de nuevo', 'danger')
+        
+        return redirect(request.url)
+    
+    try:
+        cursor=db.cursor()
+        cursor.execute(""" insert into productos(
+            nombre,
+            categoria,
+            id_usuario,
+            precio
+        )values(?,?,?,?)
+        """,(nombre, categoria, session['usuario'][0], precio)) 
+        db.commit()
+    except:
+        flash('No se pudo guardar el producto... Intentelo de nuevo', 'danger')
+        return redirect(request.url)
+    flash('Producto guardado correctamente', 'success')
+    return redirect(url_for('productos'))
+
+@app.route('/productos/editar/<id>', methods=('GET','POST'))
+def editar_producto(id):
+    if not 'usuario' in session:
+        return redirect(url_for('index'))
+    #pro=db.execute('select * from productos where id=?',(id)).fetchone()
+    if request.method=='GET':
+        categorias=db.execute('select nombre from categorias where id_usuario = ?',(session['usuario'][0],)).fetchall()
+        act=db.execute('select * from productos where id=?',(id,)).fetchone()
+        return render_template('enseccion/admin/editarpro.html',pro=act,cat=categorias)
+    
+    nombre=request.form.get('nombre')
+    precio=request.form.get('precio')
+    categoria=request.form.get('categoria')
+
+
+    if nombre=='' or precio=='':
+        flash('No pueden quedar campos vacios... Intentelo de nuevo', 'danger')
+        
+        return redirect(request.url)
+    
+    cursor=db.cursor()
+    cursor.execute(' UPDATE productos SET nombre = ?, precio= ?, categoria=? WHERE id = ?',(nombre, precio, categoria, id))
+    db.commit()
+
+    flash('Producto editado correctamente', 'success')    
+    return redirect(url_for('productos'))
+
+
+    
+    
+
+@app.route('/productos/eliminar/<id>')
+def eliminar_productos(id):
+    if not 'usuario' in session:
+        return redirect(url_for('index'))
+
+    
+
+    cursor=db.cursor()
+    cursor.execute('delete from productos where id=?',(id,))
+    db.commit()
+    flash('Categoria eliminada correctamente...','succes')
+    return redirect(url_for('productos'))
 
 
 

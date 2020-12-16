@@ -3,25 +3,27 @@
 Registrarse
 {% endblock %}
 {% block content %}
-<div>
-    <form action="{{url_for('registro')}}" method="POST">
-        <div>
-            <h1>Registrarse</h1>
+<div class="row justify-content-md-center">
+    <form action="{{url_for('registro')}}" method="POST" class="col-4  bg-dark p-3 my-4 rounded-3">
+        <div class="form-group">
+            <h1 class="text-center text-white">Registrarse</h1>
         </div>
-        <div>
-            <label for="nombre">Nombre</label>
-            <input type="text" name="nombre" id="nombre" required>
+        <div class="form-group">
+            <label for="nombre" class="text-white">Nombre<samp class="text-danger">*</samp></label>
+            <input type="text" class="form-control" name="nombre" id="nombre" required>
         </div>
-        <div>
-            <label for="email">Email</label>
-            <input type="email" name="email" id="email" required>
+        <div class="form-group">
+            <label for="email" class="text-white">Email<samp class="text-danger">*</samp></label>
+            <input type="email" class="form-control" name="email" id="email" required>
         </div>
-        <div>
-            <label for="pass">Contraseña</label>
-            <input type="password" name="password" id="password" required>
+        <div class="form-group">
+            <label for="pass" class="text-white">Contraseña<samp class="text-danger">*</samp></label>
+            <input type="password" class="form-control" name="password" id="password" required>
         </div>
-        <button type="submit">Guardar</button>
-        
+        <div class="d-grid">
+            <button type="submit" class="btn btn-primary my-2">Guardar</button>
+            <a class="text-center" href="{{url_for('index')}}">Iniciar seccion</a>
+        </div>
     </form>
 </div>
 {% endblock %}

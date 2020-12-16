@@ -3,26 +3,30 @@
 Crear
 {% endblock %}
 {% block content %}
-<div>
-    <form action="">
-        <h1>Crear producto</h1>
-        <div>
-            <label for="">Descripcion:</label>
-            <input type="text">
+<div class="row justify-content-md-center">
+    <form action="{{url_for('crear_producto')}}"  class="col-4  bg-dark p-3 my-4 rounded-3" method="POST">
+        <h1 class="text-white">Crear producto</h1>
+        <div class="form-group">
+            <label for="nombre" class="text-white">Nombre<samp class="text-danger">*</samp></label>
+            <input type="text" class="form-control" id="nombre" name="nombre">
         </div>
-        <div>
-            <label for="">Precio:</label>
-            <input type="text">
+        <div class="form-group">
+            <label for="precio" class="text-white">Precio<samp class="text-danger">*</samp></label>
+            <input type="text" class="form-control" id="precio" name="precio">
         </div>
-        <div>
-            <label for="">Categoria:</label>
-            <select name="">
-                <option value="">Value 1</option> 
-                <option value="">Value 2</option>
-                <option value="">Value 3</option>
-              </select>
+        <div class="form-group">
+            <label for="categoria" class="text-white">Categoria<samp class="text-danger">*</samp></label>
+            <select name="categoria" class="form-control" id="categoria">
+                <option value="">Seleccione...</option>
+                {% for categorias in cat %}
+                <option>{{categorias[0]}}</option> 
+                {% endfor %}
+            </select>
         </div>
-        <button>Guardar</button>
+        
+        <div class="d-grid">
+            <button type="submit" class="btn btn-primary my-2 mx-1">Guardar</button>
+        </div>
     </form>
 </div>
 {% endblock %}
